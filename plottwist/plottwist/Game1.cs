@@ -11,38 +11,35 @@ using Microsoft.Xna.Framework.Media;
 
 namespace plottwist
 {
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Popup[] popups;
         Texture2D[] mapas;
         Player player;
         Objeto[] objetos;
+        Rectangle screenRectangle;
         int numObjetos;
         int dt;
+        int screenHeight, screenWidth;
 
         public Game1()
         {
+            screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferHeight = 1366;
-            graphics.PreferredBackBufferWidth = 768;
-            graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferHeight = screenHeight;
+            graphics.PreferredBackBufferWidth = screenWidth;
+            graphics.IsFullScreen = false;
             Content.RootDirectory = "Content";
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            screenRectangle = new Rectangle(0, 0, screenWidth, screenHeight);
+            popups = new Popup[3];
+            popups[1] = new Popup("Teste");
             mapas = new Texture2D[3];
             player = new Player(0, graphics.GraphicsDevice.Viewport.Height * 3 / 4);
             numObjetos = 1;
@@ -52,13 +49,8 @@ namespace plottwist
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             mapas[0] = Content.Load<Texture2D>("mapa1");
             mapas[1] = Content.Load<Texture2D>("mapa2");
@@ -69,30 +61,20 @@ namespace plottwist
             objetos[0].framesAnimacao[1] = Content.Load<Texture2D>("frame2");
             objetos[0].framesAnimacao[2] = Content.Load<Texture2D>("frame3");
             objetos[0].som = Content.Load<SoundEffect>("microwavefinal");
+            popups[1].font = Content.Load<SpriteFont>("FontePopups");
+            popups[1].texture = Content.Load<Texture2D>("Popup");
 
-
-            // TODO: use this.Content to load your game content here
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
             dt += gameTime.ElapsedGameTime.Milliseconds;
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
             if (Keyboard.GetState().IsKeyDown(Keys.Left) && player.position.X >= 0)
                 player.position.X -= 10;
@@ -100,15 +82,22 @@ namespace plottwist
                 player.position.X += 10;
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
-                for (int i = 0; i < numObjetos; i++)
-                {
-                    if (Math.Abs((player.position.X - objetos[i].position.X)) <= 20)
+                foreach (Objeto o in objetos)
+                    if (o.VerificarPosicao(player.position.X, screenWidth) && !o.tocarAnimacao)
                     {
-                        objetos[i].tocarAnimacao = true;
-                        if(objetos[i].som != null)
-                            objetos[i].som.Play();
-                        objetos[i].tocouSom = true;
+                        o.tocarAnimacao = true;
+                        o.som.Play(0.5f,0.0f,0.0f);
                     }
+                if (popups[1].scale >= 1f)
+                {
+                    popups[1].ended = true;
+                }
+            }
+            foreach (Objeto o in objetos)
+            {
+                if (o.currentFrameAnimacao == o.numFramesAnimacao - 1 && o.mapa==player.mapaAtual)
+                {
+                    popups[player.mapaAtual].activated=true;
                 }
             }
             if (player.position.X <= 0 && player.mapaAtual > 0)
@@ -124,33 +113,22 @@ namespace plottwist
             if (dt >= 500)
             {
                 dt = 0;
-                for (int i = 0; i < numObjetos; i++)
-                {
-                    if (objetos[i].tocarAnimacao && objetos[i].currentFrameAnimacao < objetos[i].numFramesAnimacao - 1)
-                    {
-                        objetos[i].currentFrameAnimacao++;
-                    }
-                }
+                foreach (Objeto o in objetos)
+                    if(o.tocarAnimacao)
+                        o.Animation();
             }
-
-        
-            // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
             spriteBatch.Begin();
-            spriteBatch.Draw(mapas[player.mapaAtual], new Vector2(0, 0), Color.White);
+            spriteBatch.Draw(mapas[player.mapaAtual], screenRectangle, Color.White);
             spriteBatch.Draw(player.texture, player.position, Color.White);
+
+
             for (int i = 0; i < numObjetos; i++)
             {
                 if (player.mapaAtual == objetos[i].mapa && !objetos[i].tocarAnimacao)
@@ -158,6 +136,11 @@ namespace plottwist
                 if (player.mapaAtual == objetos[i].mapa && objetos[i].tocarAnimacao)
                     spriteBatch.Draw(objetos[i].framesAnimacao[objetos[i].currentFrameAnimacao], objetos[i].position, Color.White);
             }
+
+            if (popups[1].activated && !popups[1].ended)
+                 popups[1].Draw(spriteBatch,screenRectangle);
+
+
             spriteBatch.End();
 
             base.Draw(gameTime);

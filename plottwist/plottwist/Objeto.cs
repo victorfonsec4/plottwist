@@ -22,17 +22,26 @@ namespace plottwist
         public int numFramesAnimacao;
         public int currentFrameAnimacao;
         public SoundEffect som;
-        public bool tocouSom;
         public Objeto(int posX, int posY, int mapa, int numFrames)
         {
             position.X = posX;
             position.Y = posY;
             this.mapa = mapa;
             tocarAnimacao = false;
-            tocouSom = false;
             this.numFramesAnimacao = numFrames;
             framesAnimacao = new Texture2D[numFrames];
             currentFrameAnimacao = 0;
+        }
+        public void Animation()
+        {
+            if(this.currentFrameAnimacao<numFramesAnimacao-1)
+                this.currentFrameAnimacao++;
+        }
+        public bool VerificarPosicao(float pos, int width)
+        {
+            if(Math.Abs(pos-this.position.X)<=40)
+                return true;
+            return false;
         }
     }
 }
