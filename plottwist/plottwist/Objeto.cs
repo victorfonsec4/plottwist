@@ -22,7 +22,13 @@ namespace plottwist
         public int numFramesAnimacao;
         public int currentFrameAnimacao;
         public SoundEffect som;
-        public Objeto(int posX, int posY, int mapa, int numFrames)
+        private string popupText;
+        public SpriteFont popupFont;
+        public bool popupActivated;
+        public bool popupEnded;
+        public float popupScale;
+        public Texture2D popupTexture;
+        public Objeto(int posX, int posY, int mapa, int numFrames, string popupText)
         {
             position.X = posX;
             position.Y = posY;
@@ -31,6 +37,11 @@ namespace plottwist
             this.numFramesAnimacao = numFrames;
             framesAnimacao = new Texture2D[numFrames];
             currentFrameAnimacao = 0;
+
+            this.popupText = popupText;
+            popupActivated = false;
+            popupEnded = false;
+            popupScale = 0;
         }
         public void Animation()
         {
@@ -42,6 +53,13 @@ namespace plottwist
             if(Math.Abs(pos-this.position.X)<=40)
                 return true;
             return false;
+        }
+        public void DrawPopup(SpriteBatch spriteBatch, Rectangle screen)
+        {
+            spriteBatch.Draw(popupTexture, new Vector2(screen.Width / 2, screen.Height / 2), null, Color.White, 0, new Vector2(popupTexture.Width / 2, popupTexture.Height / 2), popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 0);
+            spriteBatch.DrawString(popupFont, popupText, new Vector2(screen.Width / 2, screen.Height / 2), Color.White, 0, popupFont.MeasureString(popupText)/2, popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 0);
+            if (popupScale < 1f)
+                popupScale += 0.01f;
         }
     }
 }

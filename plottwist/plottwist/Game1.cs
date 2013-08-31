@@ -15,7 +15,6 @@ namespace plottwist
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Popup[] popups;
         Texture2D[] mapas;
         Player player;
         Objeto[] objetos;
@@ -38,13 +37,11 @@ namespace plottwist
         protected override void Initialize()
         {
             screenRectangle = new Rectangle(0, 0, screenWidth, screenHeight);
-            popups = new Popup[3];
-            popups[1] = new Popup("Teste");
             mapas = new Texture2D[3];
             player = new Player(0, graphics.GraphicsDevice.Viewport.Height * 3 / 4);
             numObjetos = 1;
             objetos = new Objeto[numObjetos];
-            objetos[0] = new Objeto(graphics.GraphicsDevice.Viewport.Width/2, graphics.GraphicsDevice.Viewport.Height/2, 1, 3);
+            objetos[0] = new Objeto(graphics.GraphicsDevice.Viewport.Width / 2, graphics.GraphicsDevice.Viewport.Height / 2, 1, 3, "Teste");
             dt = 0;
             base.Initialize();
         }
@@ -61,8 +58,8 @@ namespace plottwist
             objetos[0].framesAnimacao[1] = Content.Load<Texture2D>("frame2");
             objetos[0].framesAnimacao[2] = Content.Load<Texture2D>("frame3");
             objetos[0].som = Content.Load<SoundEffect>("microwavefinal");
-            popups[1].font = Content.Load<SpriteFont>("FontePopups");
-            popups[1].texture = Content.Load<Texture2D>("Popup");
+            objetos[0].popupFont = Content.Load<SpriteFont>("FontePopups");
+            objetos[0].popupTexture = Content.Load<Texture2D>("Popup");
 
         }
 
@@ -83,21 +80,23 @@ namespace plottwist
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
                 foreach (Objeto o in objetos)
+                {
                     if (o.VerificarPosicao(player.position.X, screenWidth) && !o.tocarAnimacao)
                     {
                         o.tocarAnimacao = true;
-                        o.som.Play(0.5f,0.0f,0.0f);
+                        o.som.Play(0.5f, 0.0f, 0.0f);
                     }
-                if (popups[1].scale >= 1f)
-                {
-                    popups[1].ended = true;
+                    if (o.popupScale >= 1f)
+                    {
+                        o.popupEnded = true;
+                    }
                 }
             }
             foreach (Objeto o in objetos)
             {
-                if (o.currentFrameAnimacao == o.numFramesAnimacao - 1 && o.mapa==player.mapaAtual)
+                if (o.currentFrameAnimacao == o.numFramesAnimacao - 1 && o.mapa == player.mapaAtual)
                 {
-                    popups[player.mapaAtual].activated=true;
+                    o.popupActivated = true;
                 }
             }
             if (player.position.X <= 0 && player.mapaAtual > 0)
@@ -114,7 +113,7 @@ namespace plottwist
             {
                 dt = 0;
                 foreach (Objeto o in objetos)
-                    if(o.tocarAnimacao)
+                    if (o.tocarAnimacao)
                         o.Animation();
             }
 
@@ -135,10 +134,10 @@ namespace plottwist
                     spriteBatch.Draw(objetos[i].texture, objetos[i].position, Color.White);
                 if (player.mapaAtual == objetos[i].mapa && objetos[i].tocarAnimacao)
                     spriteBatch.Draw(objetos[i].framesAnimacao[objetos[i].currentFrameAnimacao], objetos[i].position, Color.White);
+                if (objetos[i].popupActivated && !objetos[i].popupEnded)
+                    objetos[i].DrawPopup(spriteBatch, screenRectangle);
             }
 
-            if (popups[1].activated && !popups[1].ended)
-                 popups[1].Draw(spriteBatch,screenRectangle);
 
 
             spriteBatch.End();
