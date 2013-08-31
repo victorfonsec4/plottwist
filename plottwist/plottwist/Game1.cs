@@ -22,6 +22,7 @@ namespace plottwist
         Player player;
         Objeto[] objetos;
         int numObjetos;
+        int dt;
 
         public Game1()
         {
@@ -46,7 +47,8 @@ namespace plottwist
             player = new Player(0, graphics.GraphicsDevice.Viewport.Height * 3 / 4);
             numObjetos = 1;
             objetos = new Objeto[numObjetos];
-            objetos[0] = new Objeto(graphics.GraphicsDevice.Viewport.Width/2, graphics.GraphicsDevice.Viewport.Height/2, 1, 1);
+            objetos[0] = new Objeto(graphics.GraphicsDevice.Viewport.Width/2, graphics.GraphicsDevice.Viewport.Height/2, 1, 3);
+            dt = 0;
             base.Initialize();
         }
 
@@ -63,6 +65,9 @@ namespace plottwist
             mapas[2] = Content.Load<Texture2D>("mapa3");
             player.texture = Content.Load<Texture2D>("cara");
             objetos[0].texture = Content.Load<Texture2D>("objeto1");
+            objetos[0].framesAnimacao[0] = Content.Load<Texture2D>("frame1");
+            objetos[0].framesAnimacao[1] = Content.Load<Texture2D>("frame2");
+            objetos[0].framesAnimacao[2] = Content.Load<Texture2D>("frame3");
 
 
             // TODO: use this.Content to load your game content here
@@ -84,6 +89,7 @@ namespace plottwist
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            dt += gameTime.ElapsedGameTime.Milliseconds;
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
@@ -91,6 +97,14 @@ namespace plottwist
                 player.position.X -= 10;
             if (Keyboard.GetState().IsKeyDown(Keys.Right) && player.position.X + player.texture.Width <= graphics.GraphicsDevice.Viewport.Width)
                 player.position.X += 10;
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            {
+                for (int i = 0; i < numObjetos; i++)
+                {
+                    if (Math.Abs((player.position.X - objetos[i].position.X)) <= 20)
+                        objetos[i].tocarAnimacao = true;
+                }
+            }
             if (player.position.X <= 0 && player.mapaAtual > 0)
             {
                 player.mapaAtual--;
@@ -101,8 +115,19 @@ namespace plottwist
                 player.mapaAtual++;
                 player.position.X = 0 + 30;
             }
+            if (dt >= 500)
+            {
+                dt = 0;
+                for (int i = 0; i < numObjetos; i++)
+                {
+                    if (objetos[i].tocarAnimacao && objetos[i].currentFrameAnimacao < objetos[i].numFramesAnimacao - 1)
+                    {
+                        objetos[i].currentFrameAnimacao++;
+                    }
+                }
+            }
 
-
+        
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -124,7 +149,8 @@ namespace plottwist
             {
                 if (player.mapaAtual == objetos[i].mapa && !objetos[i].tocarAnimacao)
                     spriteBatch.Draw(objetos[i].texture, objetos[i].position, Color.White);
-
+                if (player.mapaAtual == objetos[i].mapa && objetos[i].tocarAnimacao)
+                    spriteBatch.Draw(objetos[i].framesAnimacao[objetos[i].currentFrameAnimacao], objetos[i].position, Color.White);
             }
             spriteBatch.End();
 

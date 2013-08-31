@@ -20,6 +20,7 @@ namespace plottwist
         public bool tocarAnimacao;
         public Texture2D[] framesAnimacao;
         public int numFramesAnimacao;
+        public int currentFrameAnimacao;
         public Objeto(int posX, int posY, int mapa, int numFrames)
         {
             position.X = posX;
@@ -28,6 +29,7 @@ namespace plottwist
             tocarAnimacao = false;
             this.numFramesAnimacao = numFrames;
             framesAnimacao = new Texture2D[numFrames];
+            currentFrameAnimacao = 0;
         }
     }
 }
