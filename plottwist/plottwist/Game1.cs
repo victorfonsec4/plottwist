@@ -68,6 +68,7 @@ namespace plottwist
             objetos[0].framesAnimacao[0] = Content.Load<Texture2D>("frame1");
             objetos[0].framesAnimacao[1] = Content.Load<Texture2D>("frame2");
             objetos[0].framesAnimacao[2] = Content.Load<Texture2D>("frame3");
+            objetos[0].som = Content.Load<SoundEffect>("microwavefinal");
 
 
             // TODO: use this.Content to load your game content here
@@ -102,7 +103,12 @@ namespace plottwist
                 for (int i = 0; i < numObjetos; i++)
                 {
                     if (Math.Abs((player.position.X - objetos[i].position.X)) <= 20)
+                    {
                         objetos[i].tocarAnimacao = true;
+                        if(objetos[i].som != null)
+                            objetos[i].som.Play();
+                        objetos[i].tocouSom = true;
+                    }
                 }
             }
             if (player.position.X <= 0 && player.mapaAtual > 0)
