@@ -18,10 +18,16 @@ namespace plottwist
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Texture2D[] mapas;
+        Player player;
+
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferHeight = 1366;
+            graphics.PreferredBackBufferWidth = 768;
+            graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
         }
 
@@ -35,6 +41,8 @@ namespace plottwist
         {
             // TODO: Add your initialization logic here
 
+            mapas = new Texture2D[3];
+            player = new Player(0, graphics.GraphicsDevice.Viewport.Height * 3 / 4);
             base.Initialize();
         }
 
@@ -46,6 +54,11 @@ namespace plottwist
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            mapas[0] = Content.Load<Texture2D>("mapa1");
+            mapas[1] = Content.Load<Texture2D>("mapa2");
+            mapas[2] = Content.Load<Texture2D>("mapa3");
+            player.texture = Content.Load<Texture2D>("cara");
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -67,8 +80,23 @@ namespace plottwist
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
+            if (Keyboard.GetState().IsKeyDown(Keys.Left) && player.position.X >= 0)
+                player.position.X -= 10;
+            if (Keyboard.GetState().IsKeyDown(Keys.Right) && player.position.X + player.texture.Width <= graphics.GraphicsDevice.Viewport.Width)
+                player.position.X += 10;
+            if (player.position.X <= 0 && player.mapaAtual > 0)
+            {
+                player.mapaAtual--;
+                player.position.X = graphics.GraphicsDevice.Viewport.Width - player.texture.Width - 30;
+            }
+            if (player.position.X + player.texture.Width >= graphics.GraphicsDevice.Viewport.Width && player.mapaAtual < 2)
+            {
+                player.mapaAtual++;
+                player.position.X = 0 + 30;
+            }
+
 
             // TODO: Add your update logic here
 
@@ -84,6 +112,10 @@ namespace plottwist
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            spriteBatch.Draw(mapas[player.mapaAtual], new Vector2(0, 0), Color.White);
+            spriteBatch.Draw(player.texture, player.position, Color.White);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
