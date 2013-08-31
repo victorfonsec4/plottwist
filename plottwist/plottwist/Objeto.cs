@@ -25,7 +25,6 @@ namespace plottwist
         private string popupText;
         public SpriteFont popupFont;
         public bool popupActivated;
-        public bool popupEnded;
         public float popupScale;
         public Texture2D popupTexture;
         public Objeto(int posX, int posY, int mapa, int numFrames, string popupText)
@@ -40,26 +39,27 @@ namespace plottwist
 
             this.popupText = popupText;
             popupActivated = false;
-            popupEnded = false;
             popupScale = 0;
         }
         public void Animation()
         {
-            if(this.currentFrameAnimacao<numFramesAnimacao-1)
+            if (this.currentFrameAnimacao < numFramesAnimacao - 1)
                 this.currentFrameAnimacao++;
         }
         public bool VerificarPosicao(float pos, int width)
         {
-            if(Math.Abs(pos-this.position.X)<=40)
+            if (Math.Abs(pos - this.position.X) <= 40)
                 return true;
             return false;
         }
         public void DrawPopup(SpriteBatch spriteBatch, Rectangle screen)
         {
-            spriteBatch.Draw(popupTexture, new Vector2(screen.Width / 2, screen.Height / 2), null, Color.White, 0, new Vector2(popupTexture.Width / 2, popupTexture.Height / 2), popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 0);
-            spriteBatch.DrawString(popupFont, popupText, new Vector2(screen.Width / 2, screen.Height / 2), Color.White, 0, popupFont.MeasureString(popupText)/2, popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 0);
-            if (popupScale < 1f)
-                popupScale += 0.01f;
+            spriteBatch.Draw(popupTexture, new Vector2(screen.Width / 2, screen.Height / 2 - 80), null, Color.White, 0, new Vector2(popupTexture.Width / 2, popupTexture.Height / 2), popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 0);
+            spriteBatch.DrawString(popupFont, popupText, new Vector2(screen.Width / 2, screen.Height / 2 - 80), Color.White, 0, popupFont.MeasureString(popupText) / 2, popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 0);
+            if (popupActivated && popupScale < 1f)
+                popupScale += 0.07f;
+            if (!popupActivated && popupScale > 0f)
+                popupScale -= 0.07f;
         }
     }
 }
