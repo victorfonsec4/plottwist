@@ -20,7 +20,8 @@ namespace plottwist
         SpriteBatch spriteBatch;
         Texture2D[] mapas;
         Player player;
-
+        Objeto[] objetos;
+        int numObjetos;
 
         public Game1()
         {
@@ -43,6 +44,9 @@ namespace plottwist
 
             mapas = new Texture2D[3];
             player = new Player(0, graphics.GraphicsDevice.Viewport.Height * 3 / 4);
+            numObjetos = 1;
+            objetos = new Objeto[numObjetos];
+            objetos[0] = new Objeto(graphics.GraphicsDevice.Viewport.Width/2, graphics.GraphicsDevice.Viewport.Height/2, 1, 1);
             base.Initialize();
         }
 
@@ -58,6 +62,7 @@ namespace plottwist
             mapas[1] = Content.Load<Texture2D>("mapa2");
             mapas[2] = Content.Load<Texture2D>("mapa3");
             player.texture = Content.Load<Texture2D>("cara");
+            objetos[0].texture = Content.Load<Texture2D>("objeto1");
 
 
             // TODO: use this.Content to load your game content here
@@ -115,6 +120,12 @@ namespace plottwist
             spriteBatch.Begin();
             spriteBatch.Draw(mapas[player.mapaAtual], new Vector2(0, 0), Color.White);
             spriteBatch.Draw(player.texture, player.position, Color.White);
+            for (int i = 0; i < numObjetos; i++)
+            {
+                if (player.mapaAtual == objetos[i].mapa && !objetos[i].tocarAnimacao)
+                    spriteBatch.Draw(objetos[i].texture, objetos[i].position, Color.White);
+
+            }
             spriteBatch.End();
 
             base.Draw(gameTime);
