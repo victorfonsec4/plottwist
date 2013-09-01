@@ -16,7 +16,7 @@ namespace plottwist
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D[] mapas;
-        
+
         Player player;
         Objeto[] objetos;
         Rectangle screenRectangle;
@@ -40,10 +40,11 @@ namespace plottwist
             screenRectangle = new Rectangle(0, 0, screenWidth, screenHeight);
             mapas = new Texture2D[3];
             numObjetos = 2;
-            player = new Player(0,(int) (graphics.GraphicsDevice.Viewport.Height * 3/ 4) );
+            player = new Player(0, (int)(screenHeight * 3.25 / 4));
             objetos = new Objeto[numObjetos];
-            objetos[0] = new Objeto(graphics.GraphicsDevice.Viewport.Width / 2, graphics.GraphicsDevice.Viewport.Height / 2, 1, 3, "Teste", 1, 3, 500, graphics.GraphicsDevice.Viewport.Width/2);
-            objetos[1] = new Objeto(0, 0, 0, 14, "Heat Milk", 5, 3, 1000, (int)(0.73*graphics.GraphicsDevice.Viewport.Width) );
+            //depth: (0->1) 0 = back , 1 = front
+            objetos[0] = new Objeto(graphics.GraphicsDevice.Viewport.Width / 2, graphics.GraphicsDevice.Viewport.Height / 2, 1, 3, "Teste", 1, 3, 500, graphics.GraphicsDevice.Viewport.Width / 2, 0);
+            objetos[1] = new Objeto(0, 0, 0, 14, "Heat Milk", 5, 3, 1000, (int)(0.73 * graphics.GraphicsDevice.Viewport.Width), 1);
             dt = 0;
             base.Initialize();
         }
@@ -55,7 +56,7 @@ namespace plottwist
             mapas[1] = Content.Load<Texture2D>("mapa2");
             mapas[2] = Content.Load<Texture2D>("mapa3");
             player.texture = Content.Load<Texture2D>("cara");
-            objetos[0].spriteSheet= Content.Load<Texture2D>("sheet");
+            objetos[0].spriteSheet = Content.Load<Texture2D>("sheet");
             objetos[0].popupFont = Content.Load<SpriteFont>("FontePopups");
             objetos[0].popupTexture = Content.Load<Texture2D>("Popup");
             objetos[0].som = Content.Load<SoundEffect>("microwavefinal");
@@ -63,7 +64,7 @@ namespace plottwist
             objetos[1].som = Content.Load<SoundEffect>("microwavefinal");
             objetos[1].popupFont = Content.Load<SpriteFont>("FontePopups");
             objetos[1].popupTexture = Content.Load<Texture2D>("Popup");
-            }
+        }
 
         protected override void UnloadContent()
         {
@@ -81,7 +82,7 @@ namespace plottwist
                 player.position.X += 10;
             foreach (Objeto o in objetos)
             {
-                if (Math.Abs(o.posicaoX - player.position.X) <= 70 && o.mapa==player.mapaAtual && o.currentFrameAnimacao == 0)
+                if (Math.Abs(o.posicaoX - player.position.X) <= 70 && o.mapa == player.mapaAtual && o.currentFrameAnimacao == 0)
                 {
                     o.popupActivated = true;
                     if (o.popupScale <= 0f)
@@ -89,7 +90,7 @@ namespace plottwist
                 }
                 else
                     o.popupActivated = false;
-                if (Keyboard.GetState().IsKeyDown(Keys.Space) && o.VerificarPosicao(player.position.X, screenWidth) && !o.tocarAnimacao && o.mapa==player.mapaAtual)
+                if (Keyboard.GetState().IsKeyDown(Keys.Space) && o.VerificarPosicao(player.position.X, screenWidth) && !o.tocarAnimacao && o.mapa == player.mapaAtual)
                 {
                     o.tocarAnimacao = true;
                     o.som.Play(0.5f, 0.0f, 0.0f);
@@ -106,7 +107,7 @@ namespace plottwist
                 player.position.X = 0 + 30;
             }
             foreach (Objeto o in objetos)
-                if(o.tocarAnimacao)
+                if (o.tocarAnimacao)
                     o.Animation(gameTime.ElapsedGameTime.Milliseconds);
 
             base.Update(gameTime);
@@ -115,18 +116,18 @@ namespace plottwist
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
             spriteBatch.Draw(mapas[player.mapaAtual], screenRectangle, Color.White);
-            
+
             for (int i = 0; i < numObjetos; i++)
             {
+                if (objetos[i].popupScale >= 0f)
+                    objetos[i].DrawPopup(spriteBatch, screenRectangle);
                 if (player.mapaAtual == objetos[i].mapa)
                     objetos[i].Draw(spriteBatch, screenRectangle);
-                if (objetos[i].popupScale>=0f)
-                    objetos[i].DrawPopup(spriteBatch, screenRectangle);
             }
 
-            spriteBatch.Draw(player.texture, player.position, Color.White);
+            spriteBatch.Draw(player.texture, player.position, null, Color.White, 0f, new Vector2(player.texture.Width / 2, player.texture.Height / 2), 1, SpriteEffects.None, 0.8f);
 
             spriteBatch.End();
 

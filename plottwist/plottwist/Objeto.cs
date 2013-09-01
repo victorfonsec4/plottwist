@@ -27,11 +27,12 @@ namespace plottwist
         public SpriteFont popupFont;
         public bool popupActivated;
         public float popupScale;
+        private float depth;
         public Texture2D popupTexture;
         public int frameTime;
         int dt;
         public int posicaoX;
-        public Objeto(int posX, int posY, int mapa, int numFrames, string popupText, int spriteSheetHeight, int spriteSheetWidth, int frameTime, int posicaoX)
+        public Objeto(int posX, int posY, int mapa, int numFrames, string popupText, int spriteSheetHeight, int spriteSheetWidth, int frameTime, int posicaoX, float depth)
         {
             dt = 1000;
             position.X = posX;
@@ -43,6 +44,7 @@ namespace plottwist
             this.spriteSheetHeight = spriteSheetHeight;
             this.spriteSheetWidth = spriteSheetWidth;
             this.posicaoX = posicaoX;
+            this.depth = depth;
 
             this.popupText = popupText;
             popupActivated = false;
@@ -69,8 +71,8 @@ namespace plottwist
         }
         public void DrawPopup(SpriteBatch spriteBatch, Rectangle screen)
         {
-            spriteBatch.Draw(popupTexture, new Vector2(screen.Width / 2, screen.Height / 5), null, Color.White, 0, new Vector2(popupTexture.Width / 2, popupTexture.Height / 2), popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 0);
-            spriteBatch.DrawString(popupFont, popupText, new Vector2(screen.Width / 2, screen.Height / 5), Color.White, 0, popupFont.MeasureString(popupText) / 2, popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 0);
+            spriteBatch.Draw(popupTexture, new Vector2(screen.Width / 2, screen.Height / 5), null, Color.White, 0, new Vector2(popupTexture.Width / 2, popupTexture.Height / 2), popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 1);
+            spriteBatch.DrawString(popupFont, popupText, new Vector2(screen.Width / 2, screen.Height / 5), Color.White, 0, popupFont.MeasureString(popupText) / 2, popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 1);
             if (popupActivated && popupScale < 1f)
                 popupScale += 0.07f;
             if (!popupActivated && popupScale > 0f)
@@ -79,7 +81,7 @@ namespace plottwist
 
         public void Draw(SpriteBatch spriteBatch, Rectangle screen)
         {
-            spriteBatch.Draw(spriteSheet, screen, new Rectangle( (int) ((spriteSheet.Width/spriteSheetWidth)*(currentFrameAnimacao%spriteSheetWidth )), (int)( (spriteSheet.Height/spriteSheetHeight)*(currentFrameAnimacao/spriteSheetWidth) ), (int)spriteSheet.Width/spriteSheetWidth, (int)spriteSheet.Height/spriteSheetHeight), Color.White, 0, new Vector2(0,0), SpriteEffects.None, 0);
+            spriteBatch.Draw(spriteSheet, screen, new Rectangle((int)((spriteSheet.Width / spriteSheetWidth) * (currentFrameAnimacao % spriteSheetWidth)), (int)((spriteSheet.Height / spriteSheetHeight) * (currentFrameAnimacao / spriteSheetWidth)), (int)spriteSheet.Width / spriteSheetWidth, (int)spriteSheet.Height / spriteSheetHeight), Color.White, 0, new Vector2(0, 0), SpriteEffects.None, depth);
         }
     }
 }
