@@ -40,10 +40,10 @@ namespace plottwist
             screenRectangle = new Rectangle(0, 0, screenWidth, screenHeight);
             mapas = new Texture2D[3];
             numObjetos = 2;
-            player = new Player(0, graphics.GraphicsDevice.Viewport.Height * 3 / 4 + 11);
+            player = new Player(0,(int) (graphics.GraphicsDevice.Viewport.Height * 3/ 4) );
             objetos = new Objeto[numObjetos];
             objetos[0] = new Objeto(graphics.GraphicsDevice.Viewport.Width / 2, graphics.GraphicsDevice.Viewport.Height / 2, 1, 3, "Teste", 1, 3, 500, graphics.GraphicsDevice.Viewport.Width/2);
-            objetos[1] = new Objeto(0, 0, 0, 10, "Heat Milk", 4, 3, 1000, (int)(0.475*graphics.GraphicsDevice.Viewport.Width) );
+            objetos[1] = new Objeto(0, 0, 0, 14, "Heat Milk", 5, 3, 1000, (int)(0.73*graphics.GraphicsDevice.Viewport.Width) );
             dt = 0;
             base.Initialize();
         }

@@ -33,7 +33,7 @@ namespace plottwist
         public int posicaoX;
         public Objeto(int posX, int posY, int mapa, int numFrames, string popupText, int spriteSheetHeight, int spriteSheetWidth, int frameTime, int posicaoX)
         {
-            dt = 0;
+            dt = 1000;
             position.X = posX;
             position.Y = posY;
             this.mapa = mapa;
@@ -63,14 +63,14 @@ namespace plottwist
         }
         public bool VerificarPosicao(float pos, int width)
         {
-            if (Math.Abs(pos - this.posicaoX) <= 40 )
+            if (Math.Abs(pos - this.posicaoX) <= 70 )
                 return true;
             return false;
         }
         public void DrawPopup(SpriteBatch spriteBatch, Rectangle screen)
         {
-            spriteBatch.Draw(popupTexture, new Vector2(screen.Width / 2, screen.Height / 2 - 80), null, Color.White, 0, new Vector2(popupTexture.Width / 2, popupTexture.Height / 2), popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 0);
-            spriteBatch.DrawString(popupFont, popupText, new Vector2(screen.Width / 2, screen.Height / 2 - 80), Color.White, 0, popupFont.MeasureString(popupText) / 2, popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 0);
+            spriteBatch.Draw(popupTexture, new Vector2(screen.Width / 2, screen.Height / 5), null, Color.White, 0, new Vector2(popupTexture.Width / 2, popupTexture.Height / 2), popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 0);
+            spriteBatch.DrawString(popupFont, popupText, new Vector2(screen.Width / 2, screen.Height / 5), Color.White, 0, popupFont.MeasureString(popupText) / 2, popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 0);
             if (popupActivated && popupScale < 1f)
                 popupScale += 0.07f;
             if (!popupActivated && popupScale > 0f)
@@ -79,7 +79,7 @@ namespace plottwist
 
         public void Draw(SpriteBatch spriteBatch, Rectangle screen)
         {
-            spriteBatch.Draw(spriteSheet, new Rectangle((int)position.X, (int)position.Y, (int)(spriteSheet.Width / spriteSheetWidth), (int)(spriteSheet.Height / spriteSheetHeight) ), new Rectangle( (int) ((spriteSheet.Width/spriteSheetWidth)*(currentFrameAnimacao%spriteSheetWidth )), (int)( (spriteSheet.Height/spriteSheetHeight)*(currentFrameAnimacao/spriteSheetWidth) ), (int)spriteSheet.Width/spriteSheetWidth, (int)spriteSheet.Height/spriteSheetHeight), Color.White, 0, new Vector2(0,0), SpriteEffects.None, 0);
+            spriteBatch.Draw(spriteSheet, screen, new Rectangle( (int) ((spriteSheet.Width/spriteSheetWidth)*(currentFrameAnimacao%spriteSheetWidth )), (int)( (spriteSheet.Height/spriteSheetHeight)*(currentFrameAnimacao/spriteSheetWidth) ), (int)spriteSheet.Width/spriteSheetWidth, (int)spriteSheet.Height/spriteSheetHeight), Color.White, 0, new Vector2(0,0), SpriteEffects.None, 0);
         }
     }
 }
