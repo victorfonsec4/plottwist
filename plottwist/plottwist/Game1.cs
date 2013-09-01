@@ -43,8 +43,8 @@ namespace plottwist
             player = new Player(60, (int)(screenHeight * 3.25 / 4));
             objetos = new Objeto[numObjetos];
             //depth: (0->1) 0 = back , 1 = front
-            objetos[0] = new Objeto(graphics.GraphicsDevice.Viewport.Width / 2, graphics.GraphicsDevice.Viewport.Height / 2, 1, 3, "Teste", 1, 3, 500, graphics.GraphicsDevice.Viewport.Width / 2, 0);
-            objetos[1] = new Objeto(0, 0, 0, 14, "Heat Milk", 5, 3, 1000, (int)(0.73 * graphics.GraphicsDevice.Viewport.Width), 1);
+            objetos[0] = new Objeto(graphics.GraphicsDevice.Viewport.Width / 2, graphics.GraphicsDevice.Viewport.Height / 2, 1, 3, "Teste","test", 1, 3, 500, graphics.GraphicsDevice.Viewport.Width / 2, 0);
+            objetos[1] = new Objeto(0, 0, 0, 14, "Heat Milk","Your milk is hot", 5, 3, 1000, (int)(0.73 * graphics.GraphicsDevice.Viewport.Width), 1);
             dt = 0;
             base.Initialize();
         }
@@ -90,6 +90,11 @@ namespace plottwist
                 }
                 else
                     o.popupActivated = false;
+                if (o.currentFrameAnimacao == o.numFramesAnimacao - 1 && !o.animationStarted)
+                {
+                    o.finalPopup = true;
+                    o.animationStarted = true;
+                }
                 if (Keyboard.GetState().IsKeyDown(Keys.Space) && o.VerificarPosicao(player.position.X, screenWidth) && !o.tocarAnimacao && o.mapa == player.mapaAtual)
                 {
                     o.tocarAnimacao = true;
@@ -125,6 +130,8 @@ namespace plottwist
                     o.DrawPopup(spriteBatch, screenRectangle);
                 if (player.mapaAtual == o.mapa)
                     o.Draw(spriteBatch, screenRectangle);
+                if (o.finalPopup)
+                   o.DrawFinalPopup(spriteBatch, screenRectangle, (int)gameTime.ElapsedGameTime.TotalMilliseconds);
             }
 
             spriteBatch.Draw(player.texture, player.position, null, Color.White, 0f, new Vector2(player.texture.Width / 2, player.texture.Height / 2), 1, SpriteEffects.None, 0.8f);
