@@ -81,7 +81,7 @@ namespace plottwist
                 player.position.X += 10;
             foreach (Objeto o in objetos)
             {
-                if (Math.Abs(o.posicaoX - player.position.X) <= 70 && o.mapa==player.mapaAtual)
+                if (Math.Abs(o.posicaoX - player.position.X) <= 70 && o.mapa==player.mapaAtual && o.currentFrameAnimacao == 0)
                 {
                     o.popupActivated = true;
                     if (o.popupScale <= 0f)

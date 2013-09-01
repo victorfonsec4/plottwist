@@ -63,7 +63,7 @@ namespace plottwist
         }
         public bool VerificarPosicao(float pos, int width)
         {
-            if (Math.Abs(pos - this.posicaoX) <= 40)
+            if (Math.Abs(pos - this.posicaoX) <= 40 )
                 return true;
             return false;
         }
@@ -73,13 +73,13 @@ namespace plottwist
             spriteBatch.DrawString(popupFont, popupText, new Vector2(screen.Width / 2, screen.Height / 2 - 80), Color.White, 0, popupFont.MeasureString(popupText) / 2, popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 0);
             if (popupActivated && popupScale < 1f)
                 popupScale += 0.07f;
-        if (!popupActivated && popupScale > 0f)
+            if (!popupActivated && popupScale > 0f)
                 popupScale -= 0.07f;
         }
 
         public void Draw(SpriteBatch spriteBatch, Rectangle screen)
         {
-            spriteBatch.Draw(spriteSheet, new Rectangle((int)position.X, (int)position.Y, (int)(spriteSheet.Width / spriteSheetWidth), (int)(spriteSheet.Height / spriteSheetHeight) ), new Rectangle( (int) ((spriteSheet.Width/spriteSheetWidth)*(currentFrameAnimacao%spriteSheetWidth )), (int)( (spriteSheet.Height/spriteSheetHeight)*(currentFrameAnimacao/spriteSheetWidth) ), (int)spriteSheet.Width/spriteSheetWidth, (int)spriteSheet.Height/spriteSheetHeight), Color.White);
+            spriteBatch.Draw(spriteSheet, new Rectangle((int)position.X, (int)position.Y, (int)(spriteSheet.Width / spriteSheetWidth), (int)(spriteSheet.Height / spriteSheetHeight) ), new Rectangle( (int) ((spriteSheet.Width/spriteSheetWidth)*(currentFrameAnimacao%spriteSheetWidth )), (int)( (spriteSheet.Height/spriteSheetHeight)*(currentFrameAnimacao/spriteSheetWidth) ), (int)spriteSheet.Width/spriteSheetWidth, (int)spriteSheet.Height/spriteSheetHeight), Color.White, 0, new Vector2(0,0), SpriteEffects.None, 0);
         }
     }
 }
