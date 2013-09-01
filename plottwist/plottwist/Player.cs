@@ -16,9 +16,11 @@ namespace plottwist
         public Vector2 position;
         public Texture2D texture;
         public int mapaAtual;
+        public int vida;
         public Player(int posX, int posY)
         {
             mapaAtual = 0;
+            vida = 100;
             position.X = posX;
             position.Y = posY;
         }

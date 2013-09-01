@@ -39,11 +39,19 @@ namespace plottwist
         {
             screenRectangle = new Rectangle(0, 0, screenWidth, screenHeight);
             mapas = new Texture2D[3];
+<<<<<<< HEAD
             numObjetos = 1;
+            player = new Player(0,(int) (graphics.GraphicsDevice.Viewport.Height * 3/ 4) );
+            objetos = new Objeto[numObjetos];
+            objetos[0] = new Objeto(0, 0, 0, 14, "Heat Milk", 5, 3, 1000, (int)(0.73*graphics.GraphicsDevice.Viewport.Width), "Milk is Ready");
+=======
+            numObjetos = 2;
             player = new Player(60, (int)(screenHeight * 3.25 / 4));
             objetos = new Objeto[numObjetos];
             //depth: (0->1) 0 = back , 1 = front
-            objetos[0] = new Objeto(0, 0, 0, 14, "Heat Milk", 5, 3, 1000, (int)(0.73 * graphics.GraphicsDevice.Viewport.Width), 1);
+            objetos[0] = new Objeto(graphics.GraphicsDevice.Viewport.Width / 2, graphics.GraphicsDevice.Viewport.Height / 2, 1, 3, "Teste", 1, 3, 500, graphics.GraphicsDevice.Viewport.Width / 2, 0);
+            objetos[1] = new Objeto(0, 0, 0, 14, "Heat Milk", 5, 3, 1000, (int)(0.73 * graphics.GraphicsDevice.Viewport.Width), 1);
+>>>>>>> 5f0c4ce0b8440b934b4b5f957e171bbc7c41927c
             dt = 0;
             base.Initialize();
         }
@@ -55,11 +63,23 @@ namespace plottwist
             mapas[1] = Content.Load<Texture2D>("mapa2");
             mapas[2] = Content.Load<Texture2D>("mapa3");
             player.texture = Content.Load<Texture2D>("cara");
+<<<<<<< HEAD
             objetos[0].spriteSheet = Content.Load<Texture2D>("microondas");
             objetos[0].som = Content.Load<SoundEffect>("microwavefinal");
             objetos[0].popupFont = Content.Load<SpriteFont>("FontePopups");
             objetos[0].popupTexture = Content.Load<Texture2D>("Popup");
+            }
+=======
+            objetos[0].spriteSheet = Content.Load<Texture2D>("sheet");
+            objetos[0].popupFont = Content.Load<SpriteFont>("FontePopups");
+            objetos[0].popupTexture = Content.Load<Texture2D>("Popup");
+            objetos[0].som = Content.Load<SoundEffect>("microwavefinal");
+            objetos[1].spriteSheet = Content.Load<Texture2D>("microondas");
+            objetos[1].som = Content.Load<SoundEffect>("microwavefinal");
+            objetos[1].popupFont = Content.Load<SpriteFont>("FontePopups");
+            objetos[1].popupTexture = Content.Load<Texture2D>("Popup");
         }
+>>>>>>> 5f0c4ce0b8440b934b4b5f957e171bbc7c41927c
 
         protected override void UnloadContent()
         {
@@ -71,10 +91,20 @@ namespace plottwist
             dt += gameTime.ElapsedGameTime.Milliseconds;
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
+<<<<<<< HEAD
+            if (Keyboard.GetState().IsKeyDown(Keys.Left) && player.position.X >= 0 && player.mapaAtual == 0)
+                player.position.X -= 10;
+            if (Keyboard.GetState().IsKeyDown(Keys.Right) && player.position.X + player.texture.Width <= graphics.GraphicsDevice.Viewport.Width && player.mapaAtual == 0)
+=======
             if (Keyboard.GetState().IsKeyDown(Keys.Left) && player.position.X >= player.texture.Width / 2)
                 player.position.X -= 10;
             if (Keyboard.GetState().IsKeyDown(Keys.Right) && player.position.X + player.texture.Width / 2 <= graphics.GraphicsDevice.Viewport.Width)
+>>>>>>> 5f0c4ce0b8440b934b4b5f957e171bbc7c41927c
                 player.position.X += 10;
+            if (Keyboard.GetState().IsKeyDown(Keys.Left) && player.position.X >= 0 && player.mapaAtual != 0)
+                player.position.X -= 5;
+            if (Keyboard.GetState().IsKeyDown(Keys.Right) && player.position.X + player.texture.Width <= graphics.GraphicsDevice.Viewport.Width && player.mapaAtual != 0)
+                player.position.X += 5;
             foreach (Objeto o in objetos)
             {
                 if (Math.Abs(o.posicaoX - player.position.X) <= 70 && o.mapa == player.mapaAtual && o.currentFrameAnimacao == 0)
@@ -116,14 +146,28 @@ namespace plottwist
 
             foreach (Objeto o in objetos)
             {
+<<<<<<< HEAD
+                if (player.mapaAtual == objetos[i].mapa)
+                    objetos[i].Draw(spriteBatch, screenRectangle);
+                if (objetos[i].popupScale>=0f)
+                    objetos[i].DrawPopup(spriteBatch, screenRectangle);
+                if (objetos[i].popupScaleFinal >= 0f)
+                    objetos[i].DrawPopupFinal(spriteBatch, screenRectangle);
+            }
+
+            if(player.mapaAtual == 0)
+                spriteBatch.Draw(player.texture, player.position, Color.White);
+            if (player.mapaAtual != 0)
+                spriteBatch.Draw(player.texture, new Rectangle((int)player.position.X,(int) player.position.Y,(int) player.texture.Width / 2,(int) player.texture.Height / 2), Color.White);
+=======
                 if (o.popupScale >= 0f)
                     o.DrawPopup(spriteBatch, screenRectangle);
                 if (player.mapaAtual == o.mapa)
                     o.Draw(spriteBatch, screenRectangle);
             }
 
-            if(player.mapaAtual == 0)
-                spriteBatch.Draw(player.texture, player.position, null, Color.White, 0f, new Vector2(player.texture.Width / 2, player.texture.Height / 2), 1, SpriteEffects.None, 0.8f);
+            spriteBatch.Draw(player.texture, player.position, null, Color.White, 0f, new Vector2(player.texture.Width / 2, player.texture.Height / 2), 1, SpriteEffects.None, 0.8f);
+>>>>>>> 5f0c4ce0b8440b934b4b5f957e171bbc7c41927c
 
             spriteBatch.End();
 
