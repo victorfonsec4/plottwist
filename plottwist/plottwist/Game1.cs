@@ -85,6 +85,11 @@ namespace plottwist
                 }
                 else
                     o.popupActivated = false;
+                if (o.currentFrameAnimacao == o.numFramesAnimacao - 1 && !o.animationStarted)
+                {
+                    o.finalPopup = true;
+                    o.animationStarted = true;
+                }
                 if (Keyboard.GetState().IsKeyDown(Keys.Space) && o.VerificarPosicao(player.position.X, screenWidth) && !o.tocarAnimacao && o.mapa == player.mapaAtual)
                 {
                     o.tocarAnimacao = true;
@@ -120,6 +125,8 @@ namespace plottwist
                     o.DrawPopup(spriteBatch, screenRectangle);
                 if (player.mapaAtual == o.mapa)
                     o.Draw(spriteBatch, screenRectangle);
+                if (o.finalPopup)
+                   o.DrawFinalPopup(spriteBatch, screenRectangle, (int)gameTime.ElapsedGameTime.TotalMilliseconds);
             }
 
             if(player.mapaAtual == 0)

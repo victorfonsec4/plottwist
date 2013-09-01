@@ -24,15 +24,20 @@ namespace plottwist
         public int currentFrameAnimacao;
         public SoundEffect som;
         private string popupText;
+        private string finalPopupText;
         public SpriteFont popupFont;
         public bool popupActivated;
+        public bool finalPopup;
+        public bool animationStarted;
         public float popupScale;
+        public float finalPopupScale;
         private float depth;
         public Texture2D popupTexture;
         public int frameTime;
         int dt;
+        int dt2;
         public int posicaoX;
-        public Objeto(int posX, int posY, int mapa, int numFrames, string popupText, int spriteSheetHeight, int spriteSheetWidth, int frameTime, int posicaoX, float depth)
+        public Objeto(int posX, int posY, int mapa, int numFrames, string popupText, string finalPopupText,int spriteSheetHeight, int spriteSheetWidth, int frameTime, int posicaoX, float depth)
         {
             dt = 1000;
             position.X = posX;
@@ -47,8 +52,12 @@ namespace plottwist
             this.depth = depth;
 
             this.popupText = popupText;
+            this.finalPopupText = finalPopupText;
             popupActivated = false;
+            finalPopup = false;
+            animationStarted = false;
             popupScale = 0;
+            finalPopupScale = 0;
             this.frameTime = frameTime;
         }
         public void Animation(int elapsedGameTime)
@@ -77,6 +86,19 @@ namespace plottwist
                 popupScale += 0.07f;
             if (!popupActivated && popupScale > 0f)
                 popupScale -= 0.07f;
+        }
+
+        public void DrawFinalPopup(SpriteBatch spriteBatch, Rectangle screen,int elapsedGameTime)
+        {
+            dt2 += elapsedGameTime;
+            spriteBatch.DrawString(popupFont, finalPopupText, new Vector2(screen.Width / 2, screen.Height / 5), Color.White, 0, popupFont.MeasureString(finalPopupText) / 2, finalPopupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 1);
+            spriteBatch.Draw(popupTexture, new Vector2(screen.Width / 2, screen.Height / 5), null, Color.White, 0, new Vector2(popupTexture.Width / 2, popupTexture.Height / 2), finalPopupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 0.8f);
+            if (finalPopupScale <= 0 && dt2 > 1000)
+                finalPopup = false;
+            if (finalPopup && finalPopupScale < 1f && dt2<1000)
+                finalPopupScale += 0.07f;
+            if (finalPopup && finalPopupScale > 0f && dt2>1500)
+                finalPopupScale -= 0.07f;
         }
 
         public void Draw(SpriteBatch spriteBatch, Rectangle screen)
