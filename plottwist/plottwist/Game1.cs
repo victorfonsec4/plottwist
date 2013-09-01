@@ -31,7 +31,7 @@ namespace plottwist
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferHeight = screenHeight;
             graphics.PreferredBackBufferWidth = screenWidth;
-            //graphics.IsFullScreen = true;
+            graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
         }
 
@@ -40,7 +40,7 @@ namespace plottwist
             screenRectangle = new Rectangle(0, 0, screenWidth, screenHeight);
             mapas = new Texture2D[3];
             numObjetos = 2;
-            player = new Player(0, (int)(screenHeight * 3.25 / 4));
+            player = new Player(60, (int)(screenHeight * 3.25 / 4));
             objetos = new Objeto[numObjetos];
             //depth: (0->1) 0 = back , 1 = front
             objetos[0] = new Objeto(graphics.GraphicsDevice.Viewport.Width / 2, graphics.GraphicsDevice.Viewport.Height / 2, 1, 3, "Teste", 1, 3, 500, graphics.GraphicsDevice.Viewport.Width / 2, 0);
@@ -76,9 +76,9 @@ namespace plottwist
             dt += gameTime.ElapsedGameTime.Milliseconds;
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
-            if (Keyboard.GetState().IsKeyDown(Keys.Left) && player.position.X >= 0)
+            if (Keyboard.GetState().IsKeyDown(Keys.Left) && player.position.X >= player.texture.Width / 2)
                 player.position.X -= 10;
-            if (Keyboard.GetState().IsKeyDown(Keys.Right) && player.position.X + player.texture.Width <= graphics.GraphicsDevice.Viewport.Width)
+            if (Keyboard.GetState().IsKeyDown(Keys.Right) && player.position.X + player.texture.Width / 2 <= graphics.GraphicsDevice.Viewport.Width)
                 player.position.X += 10;
             foreach (Objeto o in objetos)
             {
@@ -96,15 +96,15 @@ namespace plottwist
                     o.som.Play(0.5f, 0.0f, 0.0f);
                 }
             }
-            if (player.position.X <= 0 && player.mapaAtual > 0)
+            if (player.position.X <= player.texture.Width / 2 && player.mapaAtual > 0)
             {
                 player.mapaAtual--;
-                player.position.X = graphics.GraphicsDevice.Viewport.Width - player.texture.Width - 30;
+                player.position.X = graphics.GraphicsDevice.Viewport.Width - player.texture.Width / 2 - 5;
             }
-            if (player.position.X + player.texture.Width >= graphics.GraphicsDevice.Viewport.Width && player.mapaAtual < 2)
+            if (player.position.X + player.texture.Width / 2 >= graphics.GraphicsDevice.Viewport.Width && player.mapaAtual < 2)
             {
                 player.mapaAtual++;
-                player.position.X = 0 + 30;
+                player.position.X = player.texture.Width / 2 + 5;
             }
             foreach (Objeto o in objetos)
                 if (o.tocarAnimacao)
@@ -119,12 +119,12 @@ namespace plottwist
             spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
             spriteBatch.Draw(mapas[player.mapaAtual], screenRectangle, Color.White);
 
-            for (int i = 0; i < numObjetos; i++)
+            foreach (Objeto o in objetos)
             {
-                if (objetos[i].popupScale >= 0f)
-                    objetos[i].DrawPopup(spriteBatch, screenRectangle);
-                if (player.mapaAtual == objetos[i].mapa)
-                    objetos[i].Draw(spriteBatch, screenRectangle);
+                if (o.popupScale >= 0f)
+                    o.DrawPopup(spriteBatch, screenRectangle);
+                if (player.mapaAtual == o.mapa)
+                    o.Draw(spriteBatch, screenRectangle);
             }
 
             spriteBatch.Draw(player.texture, player.position, null, Color.White, 0f, new Vector2(player.texture.Width / 2, player.texture.Height / 2), 1, SpriteEffects.None, 0.8f);

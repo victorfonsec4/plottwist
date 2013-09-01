@@ -65,14 +65,14 @@ namespace plottwist
         }
         public bool VerificarPosicao(float pos, int width)
         {
-            if (Math.Abs(pos - this.posicaoX) <= 70 )
+            if (Math.Abs(pos - this.posicaoX) <= 70)
                 return true;
             return false;
         }
         public void DrawPopup(SpriteBatch spriteBatch, Rectangle screen)
         {
-            spriteBatch.Draw(popupTexture, new Vector2(screen.Width / 2, screen.Height / 5), null, Color.White, 0, new Vector2(popupTexture.Width / 2, popupTexture.Height / 2), popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 1);
             spriteBatch.DrawString(popupFont, popupText, new Vector2(screen.Width / 2, screen.Height / 5), Color.White, 0, popupFont.MeasureString(popupText) / 2, popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 1);
+            spriteBatch.Draw(popupTexture, new Vector2(screen.Width / 2, screen.Height / 5), null, Color.White, 0, new Vector2(popupTexture.Width / 2, popupTexture.Height / 2), popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 0.8f);
             if (popupActivated && popupScale < 1f)
                 popupScale += 0.07f;
             if (!popupActivated && popupScale > 0f)
