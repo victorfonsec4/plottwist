@@ -38,7 +38,7 @@ namespace plottwist
         {
             screenRectangle = new Rectangle(0, 0, screenWidth, screenHeight);
             mapas = new Texture2D[3];
-            player = new Player(0, graphics.GraphicsDevice.Viewport.Height * 3 / 4);
+            player = new Player(0, graphics.GraphicsDevice.Viewport.Height * 3 / 4 + 11);
             numObjetos = 1;
             objetos = new Objeto[numObjetos];
             objetos[0] = new Objeto(graphics.GraphicsDevice.Viewport.Width / 2, graphics.GraphicsDevice.Viewport.Height / 2, 1, 3, "Teste", 1, 3, 500);
@@ -50,7 +50,7 @@ namespace plottwist
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            mapas[0] = Content.Load<Texture2D>("mapa1");
+            mapas[0] = Content.Load<Texture2D>("QuartoCozinha");
             mapas[1] = Content.Load<Texture2D>("mapa2");
             mapas[2] = Content.Load<Texture2D>("mapa3");
             player.texture = Content.Load<Texture2D>("cara");
@@ -58,20 +58,6 @@ namespace plottwist
             objetos[0].popupFont = Content.Load<SpriteFont>("FontePopups");
             objetos[0].popupTexture = Content.Load<Texture2D>("Popup");
             objetos[0].som = Content.Load<SoundEffect>("microwavefinal");
-            /*objetos[1].texture = Content.Load<Texture2D>("microwave/microwaveFrame10");
-            objetos[1].som = Content.Load<SoundEffect>("microwavefinal");
-            objetos[1].popupFont = Content.Load<SpriteFont>("FontePopups");
-            objetos[1].popupTexture = Content.Load<Texture2D>("Popup");
-            objetos[1].framesAnimacao[0] = Content.Load<Texture2D>("microwave/microwaveFrame1");
-            objetos[1].framesAnimacao[1] = Content.Load<Texture2D>("microwave/microwaveFrame2");
-            objetos[1].framesAnimacao[2] = Content.Load<Texture2D>("microwave/microwaveFrame3");
-            objetos[1].framesAnimacao[3] = Content.Load<Texture2D>("microwave/microwaveFrame4");
-            objetos[1].framesAnimacao[4] = Content.Load<Texture2D>("microwave/microwaveFrame5");
-            objetos[1].framesAnimacao[5] = Content.Load<Texture2D>("microwave/microwaveFrame6");
-            objetos[1].framesAnimacao[6] = Content.Load<Texture2D>("microwave/microwaveFrame7");
-            objetos[1].framesAnimacao[7] = Content.Load<Texture2D>("microwave/microwaveFrame8");
-            objetos[1].framesAnimacao[8] = Content.Load<Texture2D>("microwave/microwaveFrame9");
-            objetos[1].framesAnimacao[9] = Content.Load<Texture2D>("microwave/microwaveFrame10");*/
             }
 
         protected override void UnloadContent()

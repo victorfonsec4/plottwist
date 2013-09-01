@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace plottwist
 {
-    class Objeto
+    class Objeto : Object
     {
         public Vector2 position;
         public int mapa;
