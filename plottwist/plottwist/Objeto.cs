@@ -16,9 +16,10 @@ namespace plottwist
     {
         public Vector2 position;
         public int mapa;
-        public Texture2D texture;
         public bool tocarAnimacao;
-        public Texture2D[] framesAnimacao;
+        public Texture2D spriteSheet;
+        public int spriteSheetHeight;
+        public int spriteSheetWidth;
         public int numFramesAnimacao;
         public int currentFrameAnimacao;
         public SoundEffect som;
@@ -27,24 +28,36 @@ namespace plottwist
         public bool popupActivated;
         public float popupScale;
         public Texture2D popupTexture;
-        public Objeto(int posX, int posY, int mapa, int numFrames, string popupText)
+        public int frameTime;
+        int dt;
+        public Objeto(int posX, int posY, int mapa, int numFrames, string popupText, int spriteSheetHeight, int spriteSheetWidth, int frameTime)
         {
+            dt = 0;
             position.X = posX;
             position.Y = posY;
             this.mapa = mapa;
             tocarAnimacao = false;
             this.numFramesAnimacao = numFrames;
-            framesAnimacao = new Texture2D[numFrames];
             currentFrameAnimacao = 0;
+            this.spriteSheetHeight = spriteSheetHeight;
+            this.spriteSheetWidth = spriteSheetWidth;
 
             this.popupText = popupText;
             popupActivated = false;
             popupScale = 0;
+            this.frameTime = frameTime;
         }
-        public void Animation()
+        public void Animation(int elapsedGameTime)
         {
-            if (this.currentFrameAnimacao < numFramesAnimacao - 1)
-                this.currentFrameAnimacao++;
+            if (currentFrameAnimacao < numFramesAnimacao - 1)
+            {
+                dt += elapsedGameTime;
+                if (dt >= frameTime)
+                {
+                    dt = 0;
+                    this.currentFrameAnimacao++;
+                }
+            }
         }
         public bool VerificarPosicao(float pos, int width)
         {
@@ -60,6 +73,11 @@ namespace plottwist
                 popupScale += 0.07f;
             if (!popupActivated && popupScale > 0f)
                 popupScale -= 0.07f;
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Rectangle screen)
+        {
+            spriteBatch.Draw(spriteSheet, new Rectangle((int)position.X, (int)position.Y, (int)(spriteSheet.Width / spriteSheetWidth), (int)(spriteSheet.Height / spriteSheetHeight) ), new Rectangle( (int) ((spriteSheet.Width/spriteSheetWidth)*(currentFrameAnimacao%spriteSheetWidth )), (int)( (spriteSheet.Height/spriteSheetHeight)*(currentFrameAnimacao/spriteSheetWidth+1) ), (int)spriteSheet.Width/spriteSheetWidth, (int)spriteSheet.Height/spriteSheetHeight), Color.White);
         }
     }
 }
