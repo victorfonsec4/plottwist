@@ -139,8 +139,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Compile Include="microondas.png">
       <Name>microondas</Name>
+=======
+    <Compile Include="QuartoCozinha.png">
+      <Name>QuartoCozinha</Name>
+>>>>>>> 7d4f942aa3e27e87ad2cf40513b3036d6b2f6a8f
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

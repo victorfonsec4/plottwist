@@ -39,8 +39,8 @@ namespace plottwist
         {
             screenRectangle = new Rectangle(0, 0, screenWidth, screenHeight);
             mapas = new Texture2D[3];
-            player = new Player(0, graphics.GraphicsDevice.Viewport.Height * 3 / 4);
             numObjetos = 2;
+            player = new Player(0, graphics.GraphicsDevice.Viewport.Height * 3 / 4 + 11);
             objetos = new Objeto[numObjetos];
             objetos[0] = new Objeto(graphics.GraphicsDevice.Viewport.Width / 2, graphics.GraphicsDevice.Viewport.Height / 2, 1, 3, "Teste", 1, 3, 500, graphics.GraphicsDevice.Viewport.Width/2);
             objetos[1] = new Objeto(0, 0, 0, 10, "Heat Milk", 4, 3, 1000, (int)(0.475*graphics.GraphicsDevice.Viewport.Width) );
@@ -51,7 +51,7 @@ namespace plottwist
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            mapas[0] = Content.Load<Texture2D>("mapa1");
+            mapas[0] = Content.Load<Texture2D>("QuartoCozinha");
             mapas[1] = Content.Load<Texture2D>("mapa2");
             mapas[2] = Content.Load<Texture2D>("mapa3");
             player.texture = Content.Load<Texture2D>("cara");
