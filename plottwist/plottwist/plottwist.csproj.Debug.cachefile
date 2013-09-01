@@ -3,9 +3,7 @@ Content\mapa1.xnb
 Content\mapa2.xnb
 Content\mapa3.xnb
 Content\objeto1.xnb
-Content\microwavefinal.xnb
 Content\Popup.xnb
-Content\FontePopups.xnb
 Content\microwave\microwaveFrame1.xnb
 Content\microwave\microwaveFrame10.xnb
 Content\microwave\microwaveFrame2.xnb
@@ -17,3 +15,6 @@ Content\microwave\microwaveFrame7.xnb
 Content\microwave\microwaveFrame8.xnb
 Content\microwave\microwaveFrame9.xnb
 Content\sheet.xnb
+Content\microondas.xnb
+Content\microwavefinal.xnb
+Content\FontePopups.xnb

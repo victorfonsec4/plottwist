@@ -30,7 +30,8 @@ namespace plottwist
         public Texture2D popupTexture;
         public int frameTime;
         int dt;
-        public Objeto(int posX, int posY, int mapa, int numFrames, string popupText, int spriteSheetHeight, int spriteSheetWidth, int frameTime)
+        public int posicaoX;
+        public Objeto(int posX, int posY, int mapa, int numFrames, string popupText, int spriteSheetHeight, int spriteSheetWidth, int frameTime, int posicaoX)
         {
             dt = 0;
             position.X = posX;
@@ -41,6 +42,7 @@ namespace plottwist
             currentFrameAnimacao = 0;
             this.spriteSheetHeight = spriteSheetHeight;
             this.spriteSheetWidth = spriteSheetWidth;
+            this.posicaoX = posicaoX;
 
             this.popupText = popupText;
             popupActivated = false;
@@ -61,7 +63,7 @@ namespace plottwist
         }
         public bool VerificarPosicao(float pos, int width)
         {
-            if (Math.Abs(pos - this.position.X) <= 40)
+            if (Math.Abs(pos - this.posicaoX) <= 40)
                 return true;
             return false;
         }
@@ -71,13 +73,13 @@ namespace plottwist
             spriteBatch.DrawString(popupFont, popupText, new Vector2(screen.Width / 2, screen.Height / 2 - 80), Color.White, 0, popupFont.MeasureString(popupText) / 2, popupScale * screen.Width / (popupTexture.Width * 4), SpriteEffects.None, 0);
             if (popupActivated && popupScale < 1f)
                 popupScale += 0.07f;
-            if (!popupActivated && popupScale > 0f)
+        if (!popupActivated && popupScale > 0f)
                 popupScale -= 0.07f;
         }
 
         public void Draw(SpriteBatch spriteBatch, Rectangle screen)
         {
-            spriteBatch.Draw(spriteSheet, new Rectangle((int)position.X, (int)position.Y, (int)(spriteSheet.Width / spriteSheetWidth), (int)(spriteSheet.Height / spriteSheetHeight) ), new Rectangle( (int) ((spriteSheet.Width/spriteSheetWidth)*(currentFrameAnimacao%spriteSheetWidth )), (int)( (spriteSheet.Height/spriteSheetHeight)*(currentFrameAnimacao/spriteSheetWidth+1) ), (int)spriteSheet.Width/spriteSheetWidth, (int)spriteSheet.Height/spriteSheetHeight), Color.White);
+            spriteBatch.Draw(spriteSheet, new Rectangle((int)position.X, (int)position.Y, (int)(spriteSheet.Width / spriteSheetWidth), (int)(spriteSheet.Height / spriteSheetHeight) ), new Rectangle( (int) ((spriteSheet.Width/spriteSheetWidth)*(currentFrameAnimacao%spriteSheetWidth )), (int)( (spriteSheet.Height/spriteSheetHeight)*(currentFrameAnimacao/spriteSheetWidth) ), (int)spriteSheet.Width/spriteSheetWidth, (int)spriteSheet.Height/spriteSheetHeight), Color.White);
         }
     }
 }
